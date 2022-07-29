@@ -3,9 +3,9 @@
 - C++ test library
 - One header file only
 - Private project (made public) with the intention of learning/improving.
-    - Do not think about using it in a production environment! 
+    - Not meant to be used in a production environment.
 
-#### Output of a failed test
+#### Example output of a failed test
 
 ```
 Example Testbench
@@ -24,7 +24,7 @@ FAILED
 3/11 checks
 ```
 
-#### Output of passed test 
+#### Example output of passed test 
 
 ```
 Testbench Selftest

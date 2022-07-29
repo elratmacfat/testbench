@@ -227,7 +227,7 @@ void testbench::add( testbench::log&& l ) {
 //
 
 // s - If the operation threw an exception, the corresponding message is written back.
-// c - The callable object, which has to have the return type T.
+// c - The callable, that's performing the comparison and returns a bool.
 template <class Callable>
 void testbench::testcase::encapsulate_comparison( std::string&& s, Callable&& c ) {
 	std::string msg = std::move(s);

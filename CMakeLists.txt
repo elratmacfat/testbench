@@ -1,0 +1,29 @@
+CMAKE_MINIMUM_REQUIRED( VERSION 3.10 )
+
+PROJECT( Testbench CXX )
+
+# 
+# CONFIG FOR ALL TARGETS
+#
+INCLUDE_DIRECTORIES( inc )
+SET( CMAKE_CXX_STANDARD 11 )
+
+#
+# TARGET: SELFTEST
+#
+ADD_EXECUTABLE( selftest src/selftest.cpp )
+
+INCLUDE( CTest )
+IF(BUILD_TESTING)
+	ADD_TEST( NAME selftest COMMAND selftest )
+ENDIF()
+
+#
+# TARGET: EXAMPLE
+#
+ADD_EXECUTABLE( example src/example.cpp )
+
+#
+# INSTALL RULES
+#
+INSTALL( FILES inc/elrat/testbench.h DESTINATION include/elrat )

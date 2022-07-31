@@ -22,8 +22,8 @@ int main( int argc, char* argv[] )
 
 		t.check( true );
 
-		// testcase 't' will now go out of scope and upon destruction it 
-		// reports its results back to its parent testbench 'tb'.
+		// testcase 't' will now go out of scope and upon destruction 
+		// it reports its results back to its parent testbench 'tb'.
 	}
 
 	// Simple true/false checking
@@ -32,8 +32,10 @@ int main( int argc, char* argv[] )
 
 		// 
 		t.check( true );	// OK
-		t.check( false );	// FAILS. When printing the results, this one is marked #2,
-					// because it's the second check call within this context.
+		t.check( false );	// FAILS. When printing the results, 
+					// this one is marked #2, because it's
+					// the second check call within this 
+					// context.
 	}
 
 	// Comparing two values/objects
@@ -41,8 +43,8 @@ int main( int argc, char* argv[] )
 		auto t = tb.create("Comparison");
 		t.equal( 1, 2 );		// FAILS (#1)
 		t.equal( 1, 1 );		// OK
-		t.less_than( 1, 2 );		// OK, 1 is less than 2
-		t.greater_than( 5.15f, 3.31f );	// OK, 5.15 is greater than 3.31
+		t.less_than( 1, 2 );		// OK, 1 < 2
+		t.greater_than( 5.15f, 3.31f );	// OK, 5.15 > 3.31
 		t.less_than_or_equal( 2, 2 );	// OK
 		t.greater_than_or_equal( 2, 2);	// OK
 	}
@@ -52,9 +54,9 @@ int main( int argc, char* argv[] )
 		auto t = tb.create("Floating point comparison");
 		t.equal( 1.0008f, 1.0009f );  		// FAILS
 
-		// Add a third parameter, that tells how close the values have to be 
-		// to consider them equal.
-		t.equal( 1.0008f, 1.0009f, 0.0005f ); 	// OK, because close enough.
+		// Add a third parameter, that tells how close the values have 
+		// to be to consider them equal.
+		t.equal( 1.0008f, 1.0009f, 0.0005f ); 	// OK
 	}
 	
 	std::cout << tb;

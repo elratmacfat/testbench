@@ -7,8 +7,8 @@
 //
 // description....: testbench testing itself.
 //
-//                  To differentiate between tester and testee, the following naming convention
-//                  is applied:
+//                  To differentiate between tester and testee, the following 
+//                  naming convention is applied:
 //
 //                                      Tester   Testee
 //                                      ------   ------
@@ -17,8 +17,9 @@
 //                  
 #include "elrat/testbench.h"
 
-// Operator overloads that throw exceptions, simulating all kind of faulty implementation,
-// for example, attempts to read data that is out of range, like with std::vector::at
+// Operator overloads that throw exceptions, simulating all kind of faulty 
+// implementation, for example, attempts to read data that is out of range, 
+// like with std::vector::at
 struct A {
 	int value;
 };
@@ -41,10 +42,11 @@ int main() {
 	// checks have been reported properly.
 	//
 	{
-		auto t = tb.create("'testcase' reporting back to 'testbench' on destruction.");
+		auto t = tb.create("'testcase' destructor.");
 	 	elrat::testbench x("some testbench");
 		{
-			// testcase that fails with 4 checks in total, 3 of them failed.
+			// testcase that fails with 4 checks in total, 
+			// 3 of them failed.
 			auto y = x.create("some testcase");
 			y.check( true );
 			y.check( false );
@@ -54,18 +56,21 @@ int main() {
 			auto z = x.create("another testcase");
 			z.check( true );
 		}
-		// y went out of scope, destructor was supposed to report back to x.
+		// y went out of scope, destructor was supposed to report 
+		// back to x.
 		t.equal( x.testcases(), 2 );
 		t.equal( x.failed_testcases(), 1 );
 		t.equal( x.failed_checks(), 3 );
 	}
-	// test case: exception handling of comparison performing member functions.
+	// test case: exception handling of comparison performing member 
+	// functions.
 	{
 		auto t = tb.create("operator overloads throwing exceptions");
 		testbench x("testee testbench");
 		t.does_not_throw( [&x](){
 			auto y = x.create("testee testcase");
- 			// comparison operator overloads for A do throw in any case.
+ 			// comparison operator overloads for A do throw in any 
+			// case.
 			A a,b;
 			y.equal( a, b ); 	
 			y.less_than( a, b );

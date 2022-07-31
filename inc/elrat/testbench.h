@@ -9,8 +9,8 @@
 // 
 //                  compiler support for C++11 is required
 //                
-//                  on how to use this testing library, please refer to src/example.cpp
-//                  or src/selftest.cpp
+//                  on how to use this testing library, please refer to 
+//                  src/example.cpp or src/selftest.cpp
 //
 #ifndef ELRAT_TESTBENCH_H
 #define ELRAT_TESTBENCH_H
@@ -23,7 +23,7 @@
 
 namespace elrat {
 
-//------------------------------------- DECLARATION -----------------------------------------------
+//--- DECLARATION -------------------------------------------------------------
 
 class testbench {
 private:
@@ -42,7 +42,7 @@ public:
 	// Constructor takes a descriptive, but otherwise irrelevant name.
 	testbench( const std::string& name );
 
-	// Creates a testcase (which has the member functions that do the testing)
+	// Create a testcase with a name descriptive name (not an identifier).
 	testcase create( const std::string& name );
 
 	// 'getter'
@@ -76,7 +76,7 @@ struct testbench::log::entry {
 class testbench::testcase {
 private:
 	
-	// testbench is a friend, because it has to call the private constructor.
+	// testbench calls the private constructor.
 	friend class testbench;
 
 	// private data member
@@ -88,73 +88,98 @@ private:
 	// constructor, invoked by the parent testbench.
 	testcase( const std::string& name, testbench* parent );
 
-	// This private function is used to encapsulate comparison operations in a try-catch-block.
-	// While this is not necessary for primitive data types, the application programmer might 
-	// have own overloads, which are not necessarily guaranteed to nothrow.
+	// This private function is used to encapsulate comparison operations 
+	// in a try-catch-block.0 While this is not necessary for primitive 
+	// data types, the application programmer might have own overloads, 
+	// which are not necessarily guaranteed to nothrow.
 	template <class Callable>
-	void encapsulate_comparison( std::string&& s, Callable&& c );
+	void nothrow_cmp( std::string&& s, Callable&& c );
 public:
-	// Deleted copy constructor, because on when a testcase goes out of scope, it'll report
-	// back to the parent testbench, which shall occur only once...
+	// Deleted copy constructor, because on when a testcase goes out of 
+	// scope, it'll report back to the parent testbench, which shall occur 
+	// only once...
 	testcase( const testcase& ) = delete; 
 
 	// ... Instead the object will be moved around if necessary.
 	testcase( testcase&& ) = default;
 
-	// When destroyed the object will add its results to the parent testbench.
+	// Adds its test results to the parent testbench.
 	~testcase();
 
 	// Requires T to be implicitely convertible to bool
-	template <class T> void check( const T& );
+	template <class T> 
+	void check( const T& );
 	
-	// The following members require T to have an overloaded output operator<< 
-	// because if the check fails, the arguments will be written into a stringstream 
-	// to create a human-readable feedback message
+	// The following members require T to have an overloaded output 
+	// operator<< because if the check fails, the arguments will be 
+	// written into a stringstream to create a human-readable feedback
+	// message
 	
 	// Requires overloaded operator==
-	template <class T> void equal( const T& a, const T& b );
+	template <class T> 
+	void equal( const T& a, const T& b );
 	
 	// Requires overloaded operator< 
 	// Checks if a is in range [b-th,b+th]
-	template <class T> void equal( const T& a, const T& b, const T& th ); 
+	template <class T> 
+	void equal( const T& a, const T& b, const T& th ); 
 
 	// Requires overloaded operator< 
-	template <class T> void less_than( const T& a, const T& b );
+	template <class T> 
+	void less_than( const T& a, const T& b );
 	
 	// Requires overloaded operator<=
-	template <class T> void less_than_or_equal( const T& a, const T& b );
+	template <class T> 
+	void less_than_or_equal( const T& a, const T& b );
 	
 	// Requires overloaded operator>
-	template <class T> void greater_than( const T& a, const T& b );
+	template <class T> 
+	void greater_than( const T& a, const T& b );
 	
 	// Requires overloaded operator>=
-	template <class T> void greater_than_or_equal( const T& a, const T& b );
+	template <class T> 
+	void greater_than_or_equal( const T& a, const T& b );
 
 	// Requires operator< and operator> 
-	template <class T> void in_range( const T& a, const T& lo, const T& hi );
+	template <class T> 
+	void in_range( const T& a, const T& lo, const T& hi );
 
 	// Requires operator< and operator> 
-	template <class T> void not_in_range( const T& a, const T& lo, const T& hi );
+	template <class T> 
+	void not_in_range( const T& a, const T& lo, const T& hi );
 
-	// Type 'Callable' is callable when operator() without any arguments can invoked
-	// on the object, e.g. lambda, std::bind, function pointer or std::function
+	// Type 'Callable' is callable when operator() without any arguments 
+	// can invoked on the object, e.g. lambda, std::bind, function pointer 
+	// or std::function
 	
 	// Must not throw
-	template <class Callable> void does_not_throw( Callable&& callable );
+	template <class Callable> 
+	void does_not_throw( Callable&& callable );
+	
 	// Require anything to be caught.
-	template <class Callable> void throws_any( Callable&& callable );
+	template <class Callable> 
+	void throws_any( Callable&& callable );
+	
 	// Require any exception that implements the std::exception interface
-	template <class Callable> void throws_stdexcept( Callable&& callable );
+	template <class Callable> 
+	void throws_stdexcept( Callable&& callable );
+	
 	// Require a specific type of exception (even non-standard types)
-	template <class Exception, class Callable> void throws( Callable&& callable );
+	template <class Exception, class Callable> 
+	void throws( Callable&& callable );
 
 }; 
 
 // Utility function to create detailed error/failed message.
 // Example: 
 // 	std::string msg = intern::concatenate(
-// 		"Err #", 42, ". Answer given is [", 5.15, "], but should be over ", 9000, "!"
-// 	);
+// 		"Err #", 
+// 		42,
+// 		". Answer given is [", 
+// 		5.15, 
+// 		"], but should be over ",
+// 		9000,
+// 		"!" );
 struct testbench::intern {
 	template <class Arg, class...Args> 
 	static std::string write_to_stream( std::stringstream&, Arg, Args... );
@@ -167,7 +192,7 @@ struct testbench::intern {
 };
 
 
-//------------------------------------- IMPLEMENTATION --------------------------------------------
+//--- IMPLEMENTATION ----------------------------------------------------------
 
 //
 // testbench
@@ -226,10 +251,11 @@ void testbench::add( testbench::log&& l ) {
 // testbench::testcase
 //
 
-// s - If the operation threw an exception, the corresponding message is written back.
+// s - If the operation threw an exception, the corresponding message is 
+//     written back.
 // c - The callable, that's performing the comparison and returns a bool.
 template <class Callable>
-void testbench::testcase::encapsulate_comparison( std::string&& s, Callable&& c ) {
+void testbench::testcase::nothrow_cmp( std::string&& s, Callable&& c ) {
 	std::string msg = std::move(s);
 	bool op_result;
 	bool success{false};
@@ -268,8 +294,8 @@ void testbench::testcase::check( const T& t ) {
 
 template <class T>
 void testbench::testcase::equal( const T& a, const T& b ) {
-	encapsulate_comparison( 
-		intern::concatenate("Expected [", b, "], but found [", a, "]." ),
+	nothrow_cmp( 
+		intern::concatenate("Expected [",b, "], but found [",a, "]."),
 		[&](){
 			return (a==b);
 		}
@@ -279,10 +305,11 @@ void testbench::testcase::equal( const T& a, const T& b ) {
 template <class T>
 void testbench::testcase::equal( const T& a, const T& b, const T& th ) {
 	T diffabs = std::abs(a-b);
-	encapsulate_comparison(
+	nothrow_cmp(
 		intern::concatenate(
-			"Expected [", b,"], but found [", a,
-			"]. Absolute deviation=", diffabs," exceeds threshold=", th),
+			"Expected [",b,"], but found [", a,
+			"]. Absolute deviation=", diffabs,
+			" exceeds threshold=", th),
 		[&](){
 			return !(diffabs > th);
 		}
@@ -291,8 +318,10 @@ void testbench::testcase::equal( const T& a, const T& b, const T& th ) {
 
 template <class T>
 void testbench::testcase::less_than( const T& a, const T& b ) {
-	encapsulate_comparison(
-		intern::concatenate("Expected value to be less than [",b,"], but found [",a,"]."),
+	nothrow_cmp(
+		intern::concatenate(
+			"Expected value to be less than [",b,
+			"], but found [",a,"]."),
 		[&](){
 			return a < b;
 		}
@@ -301,8 +330,9 @@ void testbench::testcase::less_than( const T& a, const T& b ) {
 
 template <class T>
 void testbench::testcase::less_than_or_equal( const T& a, const T& b ) {
-	encapsulate_comparison(
-		intern::concatenate( "Expected value to be less than or equal to [",b,
+	nothrow_cmp(
+		intern::concatenate(
+			"Expected value to be less than or equal to [",b,
 			"], but found [",a,"]."),
 		[&](){
 			return a <= b;
@@ -312,8 +342,9 @@ void testbench::testcase::less_than_or_equal( const T& a, const T& b ) {
 
 template <class T>
 void testbench::testcase::greater_than( const T& a, const T& b ) {
-	encapsulate_comparison(
-		intern::concatenate( "Expected value to be greater than [",b,
+	nothrow_cmp(
+		intern::concatenate( 
+			"Expected value to be greater than [",b,
 			"], but found [",a,"]."),
 		[&](){
 			return a > b;
@@ -323,8 +354,9 @@ void testbench::testcase::greater_than( const T& a, const T& b ) {
 
 template <class T>
 void testbench::testcase::greater_than_or_equal( const T& a, const T& b ) {
-	encapsulate_comparison( 
-		intern::concatenate( "Expected value to be greater than or equal to [",b,
+	nothrow_cmp( 
+		intern::concatenate( 
+			"Expected value to be greater than or equal to [",b,
 			"], but found [",a,"]."),
 		[&](){
 			return a >= b;
@@ -334,8 +366,10 @@ void testbench::testcase::greater_than_or_equal( const T& a, const T& b ) {
 
 template <class T>
 void testbench::testcase::in_range( const T& a, const T& lo, const T& hi ) {
-	encapsulate_comparison(
-		intern::concatenate("Expected value in [",lo,", ",hi,"], but found [",a,"]."),
+	nothrow_cmp(
+		intern::concatenate(
+			"Expected value in [",lo,", ",hi,
+			"], but found [",a,"]."),
 		[&](){
 			return ( a >= lo && a <= hi );
 		}
@@ -343,10 +377,12 @@ void testbench::testcase::in_range( const T& a, const T& lo, const T& hi ) {
 }
 
 template <class T>
-void testbench::testcase::not_in_range( const T& a, const T& lo, const T& hi ) {
-	encapsulate_comparison(
-		intern::concatenate("Expected value to be less that [",lo,"] or greater than [",
-			hi,"], but found [",a,"]."),
+void testbench::testcase::not_in_range(const T& a, const T& lo, const T& hi) {
+	nothrow_cmp(
+		intern::concatenate(
+			"Expected value to be less that [",lo,
+			"] or greater than [",hi,
+			"], but found [",a,"]."),
 		[&](){
 			return ( a < lo || a > hi );
 		}
@@ -355,7 +391,8 @@ void testbench::testcase::not_in_range( const T& a, const T& lo, const T& hi ) {
 
 template <class Callable>
 void testbench::testcase::does_not_throw( Callable&& callable ) {
-	static const std::string msg1("Exception should not be thrown, but caught ");
+	static const std::string msg1(
+		"Exception should not be thrown, but caught ");
 	std::string msg2;
 	bool thrown{true};
 	try {
@@ -371,28 +408,30 @@ void testbench::testcase::does_not_throw( Callable&& callable ) {
 	m_log.add( thrown , msg1+msg2 );
 }
 
-// Problem: When template parameter Exception is of type std::exception, the compiler warns 
-// 	about the exception be caught earlier, in the catch-statement before.
-// 	I don't want to turn warnings off. The library should compile and work without any sharp
-// 	edges to it.
+// Problem: When template parameter Exception is of type std::exception, the 
+// 	compiler warns about the exception be caught earlier, in the 
+// 	catch-statement before. I don't want to turn warnings off. The library
+// 	should compile and work without any sharp edges to it.
 //
 // Solution attempts:
-// - Partial template specialization (Exception=std::std::exception), but it's not allowed.
-// 	A full template specialization seems not possible because of the template parameter 
-// 	'Callable'.
-// - Used the approach of [if constexpr std::is_same<Exception,std::exception>::value], but
-// 	this requires C++17, which I don't want to enforce at the moment.
+// - Partial template specialization (Exception=std::std::exception), but it's
+// 	not allowed. A full template specialization seems not possible because
+// 	of the template parameter 'Callable'.
+// - Used the approach of 
+// 	[if constexpr std::is_same<Exception,std::exception>::value], 
+// 	but this requires C++17, which I don't want to enforce at the moment.
 //
 // Current solution:
 // - If it's irrelevant what type of exception is thrown, use 'throws_any'.
 // - If *any* std::exception is expected, use 'throws_stdexcept'
-// - If one specific exception type, which can also be a derivative of std::exception, is expected,
-// 	then use 'throws', e.g. 'throws<std::range_error>'.
+// - If one specific exception type, which can also be a derivative of 
+// 	std::exception, is expected, then use 'throws', 
+// 	e.g. 'throws<std::range_error>'.
 template <class Exception, class Callable>
 void testbench::testcase::throws( Callable&& callable ) {
 	static_assert( !std::is_same<Exception,std::exception>::value, 
-		"Sorry for the inconvenience, but may I refer you to 'throws_stdexcept()' instead!"
-	);
+		"Sorry for the inconvenience, but may I refer you"
+		"to 'throws_stdexcept()' instead!" );
 	std::string msg;
 	bool failed{true};
 	try {
@@ -409,7 +448,8 @@ void testbench::testcase::throws( Callable&& callable ) {
 		);
 	}
 	catch( ... ) {
-		msg = std::string("Expected a different exception type. Caught unknown type.");
+		msg = std::string("Expected a different exception type."
+			"Caught unknown type.");
 	}
 	m_log.add( failed, msg );
 }
@@ -426,7 +466,8 @@ void testbench::testcase::throws_stdexcept( Callable&& callable ) {
 		failed = false;
 	}
 	catch( ... ) {
-		msg = std::string("Caught unknown exception (not derived from std::exception)");
+		msg = std::string("Caught unknown exception (not derived"
+			"from std::exception)");
 	}
 	m_log.add( failed, msg );
 }
@@ -470,13 +511,20 @@ testbench::log::entry::entry( int pos, std::string msg )
 // testbench::intern
 //
 template <class Arg>
-std::string testbench::intern::write_to_stream( std::stringstream& ss, Arg last ) {
+std::string testbench::intern::write_to_stream( 
+	std::stringstream& ss, 
+	Arg last ) 
+{
 	ss << last;
 	return std::string( ss.str() );
 }
 
 template <class Arg, class... Args>
-std::string testbench::intern::write_to_stream( std::stringstream& ss, Arg current, Args... rest ){
+std::string testbench::intern::write_to_stream( 
+	std::stringstream& ss, 
+	Arg current, 
+	Args... rest )
+{
 	ss << current;
 	return write_to_stream( ss, rest... );
 }
@@ -490,7 +538,8 @@ std::string testbench::intern::concatenate( Args... args ) {
 	catch( ... ) {
 
 	}
-	return std::string("[Creating feedback message failed due to an exception]");
+	return std::string("[Creating feedback message failed due to an"
+		"exception]");
 }
 
 //
@@ -516,12 +565,21 @@ std::ostream& operator<<( std::ostream& os, const testbench& tb ) {
 			os << Warning;
 		else
 			os << Passed;
-		os << '\"' << l.name << "\" (checks: " << l.check_count << ')';
+		os << '\"' 
+			<< l.name 
+			<< "\" (checks: " 
+			<< l.check_count 
+			<< ')';
 		if ( !l.check_count ) 
 			os << " Empty testcase!";
 		os << '\n';
 		for( auto& e : l.entries ) {
-			os << Indent << "#" << e.position << ": " << e.message << '\n';
+			os << Indent 
+				<< "#" 
+				<< e.position 
+				<< ": " 
+				<< e.message 
+				<< '\n';
 		}
 	}
 	os << '\n';
@@ -530,13 +588,18 @@ std::ostream& operator<<( std::ostream& os, const testbench& tb ) {
 	else {
 		if ( !failed ) 
 			os << "PASSED\n------\n(total: "
-				<< tb.testcases() << " testcases, "
-				<< tb.checks() << " checks)\n";
+				<< tb.testcases() 
+				<< " testcases, "
+				<< tb.checks() 
+				<< " checks)\n";
 		else {
 			os << "FAILED\n------\n" 
-				<< tb.failed_testcases() << "/" << tb.testcases() 
+				<< tb.failed_testcases() 
+				<< "/" 
+				<< tb.testcases() 
 				<< " testcases\n" 
-				<< tb.failed_checks() << "/" << tb.checks() 
+				<< tb.failed_checks() 
+				<< "/" << tb.checks() 
 				<< " checks\n";
 		}
 	}
@@ -545,4 +608,4 @@ std::ostream& operator<<( std::ostream& os, const testbench& tb ) {
 
 } // namespace elrat 
 
-#endif // include guard
+#endif // include guar

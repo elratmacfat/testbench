@@ -21,7 +21,7 @@
 // implementation, for example, attempts to read data that is out of range, 
 // like with std::vector::at
 struct A {
-	int value;
+	int value = 0;
 };
 
 std::ostream& operator<<(std::ostream&, const A&);
